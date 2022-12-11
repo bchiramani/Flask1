@@ -5,36 +5,137 @@
 {% endblock %}
 
 {% block body %}
-<div class="content">
-    <h1 style="text-align: center">Task Master</h1>
-    {% if tasks|length < 1 %}
-    <h4 style="text-align: center">There are no tasks. Create one below!</h4>
-    {% else %}
-    <table>
-        <tr>
-            <th>Task</th>
-            <th>Added</th>
-            <th>Actions</th>
-        </tr>
-        {% for task in tasks %}
-            <tr>
-                <td>{{ task.content }}</td>
-                <td>{{ task.date_created.date() }}</td>
-                <td>
-                    <a href="/delete/{{task.id}}">Delete</a>
-                    <br>
-                    <a href="/update/{{task.id}}">Update</a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
+<div class="mdc-card">
+    <div class="options-panel">
+      <div class="filtering-options">
+        <form  action="/" method="post">
 
-    <div class="form">
-        <form action="/" method="POST">
-            <input type="text" name="content" id="content">
-            <input type="submit" value="Add Task">
+       
+        <div class="filter-option">
+          <h3 class="filter-title">Average Filter</h3>          
+          <button class="mdc-button filter-button" id="buttonOne">
+            <span class="mdc-button__ripple"></span>
+            <span class="mdc-button__label" >Apply</span>
+         </button>
+        </div>
+        <label class="mdc-text-field mdc-text-field--outlined" style="width: 400px">
+          <span class="mdc-notched-outline">
+            <span class="mdc-notched-outline__leading"></span>
+            <span class="mdc-notched-outline__trailing"></span>
+          </span>
+          <input type="number" name="moyenneur" class="mdc-text-field__input" aria-labelledby="my-label-id" placeholder="Shape">
+        </label>
         </form>
+        <div class="filter-option">
+          <h3 class="filter-title">Gaussian Filter</h3>
+          <button class="mdc-button filter-button" id="buttonTwo">
+            <span class="mdc-button__ripple"></span>
+            <span class="mdc-button__label">Apply</span>
+         </button>
+        </div>
+        <div class="filter-option">
+          <h3 class="filter-title">Thresholding</h3>
+          
+        </div>
+        <ul class="mdc-list mdc-list--two-line">
+          <li class="mdc-list-item ">
+            <div class="thresh-option">
+              <h4 class="filter-subtitle">Automatic Threshold</h4>
+              <button class="mdc-button thresh-button" id="buttonThree">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__label">Apply</span>
+             </button>
+            </div>
+          </li>
+          <li class="mdc-list-item">
+            <div class="thresh-option">
+              <h4 class="filter-subtitle">Manual Threshold</h4>
+              <button class="mdc-button thresh-button" id="buttonFour">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__label">Apply</span>
+             </button>
+          
+          </li>
+          <li class="mdc-list-item">
+            <form id="manual-thresholding-form thresh-form">
+              <label for="red-threshold-input">Red Thresh</label>
+              <label class="mdc-text-field mdc-text-field--outlined label-thresh">
+                <span class="mdc-notched-outline">
+                  <span class="mdc-notched-outline__leading"></span>
+                  <span class="mdc-notched-outline__trailing"></span>
+                </span>
+                <input type="number" class="mdc-text-field__input input-thresh" aria-labelledby="my-label-id" placeholder="Red Thresh">
+              </label>
+              <br>
+              <br>
+              <label for="green-threshold-input">Green Thresh</label>
+              <label class="mdc-text-field mdc-text-field--outlined label-thresh">
+                <span class="mdc-notched-outline">
+                  <span class="mdc-notched-outline__leading"></span>
+                  <span class="mdc-notched-outline__trailing"></span>
+                </span>
+                <input type="number" class="mdc-text-field__input input-thresh" aria-labelledby="my-label-id" placeholder="Red Thresh">
+              </label>
+              <br>
+              <br>
+              <label for="blue-threshold-input" >Blue Thresh</label>
+              <label class="mdc-text-field mdc-text-field--outlined label-thresh">
+                <span class="mdc-notched-outline">
+                  <span class="mdc-notched-outline__leading"></span>
+                  <span class="mdc-notched-outline__trailing"></span>
+                </span>
+                <input type="number" class="mdc-text-field__input input-thresh" aria-labelledby="my-label-id" placeholder="Red Thresh">
+              </label>
+            </form>
+          </li>
+          
+        </ul>
+        
+      </div>
     </div>
-</div>
+    <div class="image-panel">
+      <div class="mdc-card image-displayer">
+        <div class="image-container">
+          <img src="" id="img" alt="image" class="image" default-src="images/default.png">
+        </div>
+      </div>
+      <div class="bottom-panel">
+        <form action="/" method="post">
+
+        <input id="browse-input" name="save" type="file" onchange="previewImage(this)">
+        <button class="mdc-button mdc-button--raised save-button" id="saveButton" >
+          <span class="mdc-button__label">Save</span>
+          
+
+          
+        </button>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+
+  <script>
+function applyLinearFilter() {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", "/moyenneur", false);
+    xmlHttp.send(null);
+    return xmlHttp.responseText;
+}
+</script>
+
+
+<script>
+    function previewImage(input) {
+      console.log(input)
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          
+            document.getElementById('img').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+  </script>
 {% endblock %}
